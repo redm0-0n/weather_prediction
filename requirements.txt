@@ -1,0 +1,11 @@
+pandas
+scikit-learn
+requests
+dvc
+mlflow
+fastapi
+uvicorn
+streamlit
+apache-airflow
+pathlib
+datetime

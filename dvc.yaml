@@ -1,0 +1,19 @@
+stages:
+
+  collect_history:
+
+    cmd: python code/datasets/collect_history.py
+
+    outs:
+      - data/raw/weather_history.csv
+
+  prepare:
+    cmd: python code/datasets/prepare_dataset.py
+
+    deps:
+      - code/datasets/prepare_dataset.py
+      - data/raw/weather_history.csv
+
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
