@@ -12,8 +12,8 @@ stages:
     deps:
     - path: code/datasets/prepare_dataset.py
       hash: md5
-      md5: 2cc08bf5eb16cbc81a8ef82523003925
-      size: 1972
+      md5: 9ab4d1900c4273b410a92e8cd52b3e3b
+      size: 3767
     - path: data/raw/weather_history.csv
       hash: md5
       md5: a7eff4b8fbff2b9a9e325e9b4edace75
@@ -27,3 +27,27 @@ stages:
       hash: md5
       md5: 7a8fc50bbefca3d1ea391c72b4050a07
       size: 1511556
+  train:
+    cmd: python code/models/train.py
+    deps:
+    - path: code/models/train.py
+      hash: md5
+      md5: ee86a792dc917e5fe26fda6d1bd1d8c7
+      size: 4256
+    - path: data/processed/test.csv
+      hash: md5
+      md5: bbfc5219ca96c40310d9014231bf238f
+      size: 376393
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 7a8fc50bbefca3d1ea391c72b4050a07
+      size: 1511556
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: 5528b34a5167c7e5e80425d0455b6020
+      size: 99
+    - path: models/model.pkl
+      hash: md5
+      md5: 5b56b7581b975e043957c20b72643b21
+      size: 110322243

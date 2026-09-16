@@ -38,7 +38,62 @@ def add_time_features(df):
     return df
 
 def clean(df):
-    df = df.dropna()
+    df = df.replace([float("inf"), float("-inf")], pd.NA)
+    rows_before = len(df)
+    df = df.dropna().copy()
+    rows_removed = rows_before - len(df)
+    print(f"Rows removed because of missing values: {rows_removed}")
+    return df
+
+
+def remove_outliers(df):
+    df = df.copy()
+    rows_before = len(df)
+    valid_mask = pd.Series(True, index=df.index)
+
+    for column in df.columns:
+        if column.endswith("_humidity"):
+            valid_mask &= df[column].between(0, 100)
+        elif column.endswith("_cloud_cover"):
+            valid_mask &= df[column].between(0, 100)
+        elif column.endswith("_wind_direction"):
+            valid_mask &= df[column].between(0, 360)
+        elif column.endswith("_precipitation"):
+            valid_mask &= df[column] >= 0
+        elif column.endswith("_wind_speed"):
+            valid_mask &= df[column] >= 0
+        elif column.endswith("_pressure"):
+            valid_mask &= df[column].between(850, 1100)
+
+    df = df.loc[valid_mask].copy()
+    iqr_columns = [
+        column
+        for column in df.columns
+        if (
+            column.endswith("_temperature")
+            or column.endswith("_pressure")
+            or column.endswith("_wind_speed")
+        )
+    ]
+    outlier_mask = pd.Series(False, index=df.index)
+
+    for column in iqr_columns:
+        q1 = df[column].quantile(0.25)
+        q3 = df[column].quantile(0.75)
+        iqr = q3 - q1
+        if iqr == 0:
+            continue
+
+        lower_bound = q1 - 3 * iqr
+        upper_bound = q3 + 3 * iqr
+
+        outlier_mask |= ~df[column].between(lower_bound, upper_bound)
+
+    df = df.loc[~outlier_mask].copy()
+
+    rows_removed = rows_before - len(df)
+    print(f"Rows removed as outliers: {rows_removed}")
+
     return df
 
 def split(df):
@@ -57,6 +112,7 @@ def main():
     df = create_target(df)
     df = add_time_features(df)
     df = clean(df)
+    df = remove_outliers(df)
 
     train, test = split(df)
     TRAIN_OUTPUT.parent.mkdir(parents=True, exist_ok=True)

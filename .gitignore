@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DVC local cache
+.dvc/site-cache/
+
+# MLflow local state
+mlflow.db
+mlruns/
+mlartifacts/
