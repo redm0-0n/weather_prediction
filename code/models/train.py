@@ -128,16 +128,6 @@ def log_to_mlflow(metrics):
 
     print("Experiment logged to MLflow")
 
-    with mlflow.start_run():
-        mlflow.log_params(MODEL_PARAMS)
-        mlflow.log_metrics(metrics)
-        mlflow.log_param("prediction_horizon_hours", 3)
-        mlflow.log_param("target_column", TARGET_COLUMN)
-        mlflow.log_artifact(str(MODEL_OUTPUT_PATH))
-        mlflow.log_artifact(str(METRICS_OUTPUT_PATH))
-
-    print("Experiment logged to MLflow")
-
 def main():
     train_df, test_df = load_datasets()
 
