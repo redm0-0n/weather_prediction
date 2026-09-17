@@ -224,3 +224,8 @@ __marimo__/
 mlflow.db
 mlruns/
 mlartifacts/
+
+services/airflow/logs/
+services/airflow/__pycache__/
+services/airflow/dags/__pycache__/
+*.generated
