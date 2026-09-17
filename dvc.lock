@@ -32,8 +32,8 @@ stages:
     deps:
     - path: code/models/train.py
       hash: md5
-      md5: ee86a792dc917e5fe26fda6d1bd1d8c7
-      size: 4256
+      md5: eaa574586b3823235e06cdd42ff0a4da
+      size: 5083
     - path: data/processed/test.csv
       hash: md5
       md5: bbfc5219ca96c40310d9014231bf238f

@@ -5,6 +5,7 @@ import mlflow
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from mlflow import MlflowClient
 
 TRAIN_DATA_PATH = Path("data/processed/train.csv")
 TEST_DATA_PATH = Path("data/processed/test.csv")
@@ -103,8 +104,29 @@ def save_metrics(metrics):
     print(f"Metrics saved to: {METRICS_OUTPUT_PATH}")
 
 def log_to_mlflow(metrics):
+    experiment_name = "weather-temperature-forecast"
+    artifact_location = "mlruns/weather-temperature-forecast"
     mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    mlflow.set_experiment("weather-temperature-forecast")
+
+    client = MlflowClient()
+    experiment = client.get_experiment_by_name(experiment_name)
+    if experiment is None:
+        experiment_id = client.create_experiment(
+            name=experiment_name,
+            artifact_location=artifact_location,
+        )
+    else:
+        experiment_id = experiment.experiment_id
+
+    with mlflow.start_run(experiment_id=experiment_id):
+        mlflow.log_params(MODEL_PARAMS)
+        mlflow.log_metrics(metrics)
+        mlflow.log_param("prediction_horizon_hours", 3)
+        mlflow.log_param("target_column", TARGET_COLUMN)
+        mlflow.log_artifact(str(MODEL_OUTPUT_PATH))
+        mlflow.log_artifact(str(METRICS_OUTPUT_PATH))
+
+    print("Experiment logged to MLflow")
 
     with mlflow.start_run():
         mlflow.log_params(MODEL_PARAMS)

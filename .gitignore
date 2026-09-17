@@ -229,3 +229,26 @@ services/airflow/logs/
 services/airflow/__pycache__/
 services/airflow/dags/__pycache__/
 *.generated
+
+# Additional MLflow state
+mlflow*.db
+mlflow/
+
+# Airflow local state
+airflow.db
+airflow.cfg
+standalone_admin_password.txt
+simple_auth_manager_passwords.json*
+webserver_config.py
+
+# Generated plots
+plots/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
